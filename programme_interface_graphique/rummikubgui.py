@@ -1,9 +1,15 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QGridLayout, QLabel, QMessageBox,QHBoxLayout,QMainWindow
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QGridLayout, QLabel, QMessageBox, QHBoxLayout, QMainWindow
 from jetonwidget import JetonWidget
 from boardJetonwidget import BoardJetonWidget
 
 class RummikubGUI(QMainWindow):
     def __init__(self, jeu):
+        """
+        Initialise l'interface graphique du jeu Rummikub.
+        
+        Paramètres :
+        - jeu : Instance de la classe Jeu qui contient les informations de jeu.
+        """
         super().__init__()
       
         self.jeu = jeu  # Instance de la classe Jeu
@@ -12,19 +18,22 @@ class RummikubGUI(QMainWindow):
         self.selected_jetons = []  # Liste pour stocker les jetons sélectionnés
         self.selected_board_jetons = []  # Liste pour les jetons sélectionnés sur le plateau
         self.setGeometry(100, 100, 800, 600)
-        self.etat_initial_chevalet = joueur_actuel.chevalet[:]
-        self.etat_initial_plateaux = joueur_actuel.jetons_du_plateau[:]
-        self.etat_initial_combinaisons = [comb[:] for comb in self.jeu.plateau.combinaisons]
-        self.etat_initial_joueur = joueur_actuel.premier_jeu
+        self.etat_initial_chevalet = joueur_actuel.chevalet[:]  # État initial du chevalet du joueur
+        self.etat_initial_plateaux = joueur_actuel.jetons_du_plateau[:]  # État initial des jetons du plateau
+        self.etat_initial_combinaisons = [comb[:] for comb in self.jeu.plateau.combinaisons]  # État initial des combinaisons sur le plateau
+        self.etat_initial_joueur = joueur_actuel.premier_jeu  # État initial de premier_jeu du joueur
 
         # Initialisation de la zone de plateau et du chevalet
         self.plateau_widget = QWidget()
         self.chevalet_widget = QWidget()
-        self.init_ui()
+        self.init_ui()  # Appel à la méthode pour initialiser l'interface utilisateur
         self.a_joue_combinaison = False  # Indique si une combinaison a été jouée
         self.total_points = 0  # Points accumulés pendant le tour
 
     def init_ui(self):
+        """
+        Initialise l'interface utilisateur du jeu avec les différents layouts et widgets.
+        """
         # Layout principal
         layout_principal = QVBoxLayout()
 
@@ -42,11 +51,11 @@ class RummikubGUI(QMainWindow):
 
         # Boutons de contrôle
         self.bouton_piocher = QPushButton("Piocher")
-        self.bouton_piocher.clicked.connect(self.piocher)
+        self.bouton_piocher.clicked.connect(self.piocher)  # Connexion de l'action à la méthode piocher
         self.bouton_jouer_combinaison = QPushButton("Jouer Combinaison")
-        self.bouton_jouer_combinaison.clicked.connect(self.jouer_combinaison)
+        self.bouton_jouer_combinaison.clicked.connect(self.jouer_combinaison)  # Connexion de l'action à la méthode jouer_combinaison
         self.bouton_prendre_jeton = QPushButton("Prendre Jeton")
-        self.bouton_prendre_jeton.clicked.connect(self.prendre_jeton)
+        self.bouton_prendre_jeton.clicked.connect(self.prendre_jeton)  # Connexion de l'action à la méthode prendre_jeton
 
         # Ajout des boutons au layout
         control_layout = QHBoxLayout()
@@ -61,11 +70,13 @@ class RummikubGUI(QMainWindow):
         self.setCentralWidget(central_widget)
 
         # Afficher le plateau et le chevalet
-        self.afficher_plateau()
-        self.afficher_chevalet()
+        self.afficher_plateau()  # Affichage initial du plateau
+        self.afficher_chevalet()  # Affichage initial du chevalet
 
     def afficher_plateau(self):
-        """Affiche toutes les combinaisons sur le plateau de jeu sans écraser les combinaisons précédentes."""
+        """
+        Affiche toutes les combinaisons sur le plateau de jeu sans écraser les combinaisons précédentes.
+        """
         # Nettoyer le layout du plateau
         for i in reversed(range(self.plateau_layout.count())):
             widget_to_remove = self.plateau_layout.itemAt(i).widget()
@@ -79,7 +90,9 @@ class RummikubGUI(QMainWindow):
                 self.plateau_layout.addWidget(image_label, row_index, col_index)
 
     def afficher_chevalet(self):
-        """Affiche les jetons dans le chevalet du joueur actuel et les jetons pris du plateau."""
+        """
+        Affiche les jetons dans le chevalet du joueur actuel et les jetons pris du plateau.
+        """
         joueur = self.jeu.joueurs[self.jeu.tour % len(self.jeu.joueurs)]
     
         # Nettoyer le layout du chevalet
