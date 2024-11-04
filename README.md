@@ -1,18 +1,18 @@
-#Rummikub
+# Rummikub
 pour jouer au jeux utiliser le code main pour lancer le jeux
 
 Bienvenue dans le jeu Rummikub ! Ce projet est une implémentation du célèbre jeu de société qui allie stratégie et chance. Les joueurs s'efforcent de former des combinaisons de jetons pour marquer des points tout en jouant contre d'autres.
 
-#Description du jeu
+## Description du jeu
 
 Rummikub est un jeu qui se joue avec des jetons numérotés de différentes couleurs. L'objectif est de poser toutes ses tuiles sur le plateau en formant des combinaisons valides. Le jeu se termine lorsqu'un joueur n'a plus de jetons, et le gagnant est celui qui a le moins de points restants.
 
-#Technologies utilisées
+## Technologies utilisées
 
     Python 3.x
     PyQt5
 
-#Règles du Rummikub
+## Règles du Rummikub
 Objectif du jeu : Le but est de se débarrasser de tous ses jetons en formant des combinaisons valides sur le plateau.
 
 Jetons : Le jeu comprend des jetons numérotés de 1 à 13, dans quatre couleurs différentes, ainsi que des jokers.
