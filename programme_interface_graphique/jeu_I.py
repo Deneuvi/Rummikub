@@ -107,6 +107,17 @@ class Jeu:
         """
         if len(combinaison) < 3:  # Vérifie si la combinaison a au moins 3 jetons
             return False  # Retourne faux si la combinaison est trop courte
+
+        # Vérifier les doublons (même nombre et même couleur)
+        jetons_seen = set()
+        for jeton in combinaison:
+            if isinstance(jeton, Joker):
+                continue  # Ignore les jokers
+            
+            identifiant = (jeton.nombre, jeton.couleur)
+            if identifiant in jetons_seen:
+                return False
+            jetons_seen.add(identifiant)
         
         # Séparer les jokers et les jetons normaux
         jokers = [jeton for jeton in combinaison if isinstance(jeton, Joker)]  # Liste des jokers
