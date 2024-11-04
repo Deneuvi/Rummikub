@@ -337,4 +337,4 @@ class Jeu:
         Retourne :
         - True si la partie est terminée, False sinon.
         """
-        return not self.tas_jetons and self.tentatives_sans_jeton >= len(self.joueurs) * 2
+        return not self.tas_jetons and self.tentatives_sans_jeton >= len(self.joueurs)
