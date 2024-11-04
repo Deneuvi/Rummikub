@@ -116,6 +116,9 @@ class Jeu:
         # Vérifier les doublons (même nombre et même couleur)
         jetons_seen = set()
         for jeton in combinaison:
+            if isinstance(jeton, Joker):
+                continue  # Ignore les jokers
+            
             identifiant = (jeton.nombre, jeton.couleur)
             if identifiant in jetons_seen:
                 return False
