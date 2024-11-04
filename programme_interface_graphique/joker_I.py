@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov  1 18:49:33 2024
-
-@author: kerri
-"""
 from jeton_I import Jeton 
 
 class Joker(Jeton):
