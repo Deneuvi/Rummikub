@@ -37,7 +37,7 @@ Tours de jeu :
         Piocher un jeton.
         Poser des jetons sur le plateau.
         Ajouter des jetons aux combinaisons existantes.
-    Le tour se termine quand le joueur a terminé son action.
+    Le tour se termine quand le joueur mis fin à sont tour en piochant 
 
 Fin du jeu :
 
