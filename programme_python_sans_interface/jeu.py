@@ -112,6 +112,14 @@ class Jeu:
         """
         if len(combinaison) < 3:
             return False
+
+        # Vérifier les doublons (même nombre et même couleur)
+        jetons_seen = set()
+        for jeton in combinaison:
+            identifiant = (jeton.nombre, jeton.couleur)
+            if identifiant in jetons_seen:
+                return False
+            jetons_seen.add(identifiant)
         
         # Séparer les jokers et les jetons normaux
         jokers = [jeton for jeton in combinaison if isinstance(jeton, Joker)]
