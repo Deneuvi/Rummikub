@@ -3,19 +3,17 @@ from jeton import Jeton
 from joker import Joker 
 import random
 
-
 class Jeu:
-    """Représente le jeu Rummikub, gérant les joueurs, les jetons et le plateau."""
-    
     def __init__(self):
-        """Initialise une nouvelle partie de Rummikub avec les joueurs, le tas de jetons, le plateau, et d'autres paramètres.
-        
-        Les attributs incluent :
-        - joueurs : une liste de joueurs participant au jeu.
-        - tas_jetons : le tas de jetons à distribuer aux joueurs.
-        - plateau : un objet de type Plateau pour gérer les combinaisons posées.
-        - tour : l'indice du tour actuel.
-        - tentatives_sans_jeton : le nombre de tentatives sans jeton à piocher.
+        """
+        Initialise une nouvelle instance du jeu.
+
+        Attributs :
+        - joueurs : Liste des joueurs participant au jeu.
+        - tas_jetons : Tas de jetons disponible pour le jeu.
+        - plateau : Plateau de jeu représentant l'état du jeu.
+        - tour : Indice du tour actuel (0 pour le premier tour).
+        - tentatives_sans_jeton : Compteur de tentatives sans jeton à piocher.
         """
         self.joueurs = []
         self.tas_jetons = self.creer_tas_jetons()
@@ -24,10 +22,11 @@ class Jeu:
         self.tentatives_sans_jeton = 0
 
     def creer_tas_jetons(self):
-        """Crée le tas de jetons pour le jeu, incluant les jetons de couleurs et les jokers.
-        
+        """
+        Crée le tas de jetons pour le jeu.
+
         Retourne :
-        - Une liste de jetons mélangés, prêts à être distribués aux joueurs.
+        - Une liste de jetons, incluant des jokers.
         """
         couleurs = ['Rouge', 'Bleu', 'Vert', 'Jaune']
         jetons = []
@@ -44,18 +43,20 @@ class Jeu:
         return jetons
 
     def ajouter_joueur(self, joueur):
-        """Ajoute un joueur à la liste des joueurs du jeu.
-        
+        """
+        Ajoute un joueur à la liste des joueurs.
+
         Paramètres :
-        - joueur : l'objet joueur à ajouter.
+        - joueur : Instance du joueur à ajouter.
         """
         self.joueurs.append(joueur)
 
     def distribuer_jetons(self, nombre_jetons):
-        """Distribue un certain nombre de jetons à chaque joueur.
-        
+        """
+        Distribue un nombre spécifié de jetons à chaque joueur.
+
         Paramètres :
-        - nombre_jetons : le nombre de jetons à distribuer à chaque joueur.
+        - nombre_jetons : Nombre de jetons à distribuer à chaque joueur.
         """
         for joueur in self.joueurs:
             for _ in range(nombre_jetons):
@@ -64,10 +65,11 @@ class Jeu:
                     joueur.piocher(jeton)
 
     def determine_depart(self):
-        """Détermine quel joueur commence la partie, en fonction de la valeur du jeton pioché.
-        
+        """
+        Détermine le premier joueur qui commencera le jeu.
+
         Retourne :
-        - Le joueur qui commence la partie.
+        - Le joueur qui a le jeton le plus élevé.
         """
         max_jeton = -1
         premier_joueur = None
@@ -80,13 +82,14 @@ class Jeu:
         return premier_joueur
 
     def ajouter_combinaison(self, combinaison):
-        """Ajoute une combinaison de jetons au plateau si elle est valide.
-        
+        """
+        Ajoute une combinaison de jetons au plateau si elle est valide.
+
         Paramètres :
-        - combinaison : la liste de jetons à ajouter au plateau.
-        
+        - combinaison : Liste de jetons à ajouter au plateau.
+
         Retourne :
-        - True si la combinaison a été ajoutée avec succès, False sinon.
+        - True si la combinaison a été ajoutée, False sinon.
         """
         if self.verifier_combinaison(combinaison):
             self.plateau.ajouter_combinaison(combinaison)
@@ -98,13 +101,12 @@ class Jeu:
             return False
 
     def verifier_combinaison(self, combinaison):
-        """Vérifie si une combinaison de jetons est valide selon les règles du jeu.
-        
-        Une combinaison peut être une suite (même couleur) ou une série (même nombre).
-        
+        """
+        Vérifie si une combinaison de jetons est valide (suite ou série).
+
         Paramètres :
-        - combinaison : liste de jetons à évaluer.
-        
+        - combinaison : Liste de jetons à vérifier.
+
         Retourne :
         - True si la combinaison est valide, False sinon.
         """
@@ -123,7 +125,7 @@ class Jeu:
         non_jokers.sort(key=lambda jeton: jeton.nombre)
         couleurs = {jeton.couleur for jeton in non_jokers}
         nombres = [jeton.nombre for jeton in non_jokers]
-
+        
         # Vérification des suites
         if len(couleurs) == 1:  # Si c'est une suite
             jokers_utilises = 0  # Compteur pour les jokers utilisés
@@ -133,9 +135,9 @@ class Jeu:
                 print(ecart)
                 if ecart == 2:  # Si l'écart est de 2, on peut utiliser un joker
                     jokers_utilises += 1
-                if ecart == 3:  # Si l'écart est de 3, on peut utiliser un joker
+                if ecart == 3:  # Si l'écart est de 3, on peut utiliser deux jokers
                     jokers_utilises += 2
-                elif ecart > 4:  # Si l'écart est supérieur à 4, c'est impossible
+                elif ecart > 4:  # Si l'écart est supérieur à 2, c'est impossible
                     return False
                 print(len(jokers))
                 # Vérifie si le nombre de jokers utilisés ne dépasse pas le nombre de jokers disponibles
@@ -146,17 +148,17 @@ class Jeu:
     
         elif len(set(nombres)) == 1:  # Si c'est une série
             # Vérification si le nombre de couleurs est suffisant avec les jokers
-            # Vérification des couleurs uniques
             if len(couleurs) == len(non_jokers):
-                return len(couleurs) + len(jokers) >= 3
-            
+               return len(couleurs) + len(jokers) >= 3
+        
         return False
 
     def joueur_gagnant(self):
-        """Détermine si un joueur a gagné en n'ayant plus de jetons.
-        
+        """
+        Vérifie s'il y a un joueur gagnant (n'ayant plus de jetons).
+
         Retourne :
-        - L'objet joueur qui a gagné, ou None si aucun joueur n'a gagné.
+        - Le joueur gagnant, ou None s'il n'y en a pas.
         """
         for joueur in self.joueurs:
             if not joueur.chevalet:
@@ -164,18 +166,20 @@ class Jeu:
         return None
 
     def joueur_avec_moins_jetons(self):
-        """Détermine le joueur ayant le moins de jetons restants dans son chevalet.
-        
+        """
+        Détermine le joueur ayant le moins de jetons.
+
         Retourne :
-        - L'objet joueur avec le moins de jetons.
+        - Le joueur avec le moins de jetons.
         """
         return min(self.joueurs, key=lambda joueur: len(joueur.chevalet))
 
     def jouer_tour(self):
-        """Joue un tour pour le joueur actuel, incluant la logique de prise et de pose des jetons.
-        
+        """
+        Exécute le tour d'un joueur, gérant les actions de jeu.
+
         Retourne :
-        - True si le tour a été joué avec succès, False si la partie est terminée.
+        - True si le tour a été joué avec succès, False si le jeu est terminé.
         """
         joueur_actuel = self.joueurs[self.tour % len(self.joueurs)]
         print(f"C'est le tour de {joueur_actuel.nom}!")
@@ -202,66 +206,135 @@ class Jeu:
             print("Plateau :")
             self.plateau.afficher()
     
-            # Processus de prise de jetons
-            jeton = joueur_actuel.prendre_jeton()
-            if jeton:
-                print(f"{joueur_actuel.nom} a pris le jeton {jeton}")
-                total_points += jeton.nombre  # Ajout de la valeur du jeton aux points totaux
-    
-            if total_points >= 30 and not a_joue_combinaison:
-                print(f"{joueur_actuel.nom} a déjà atteint 30 points.")
-                break  # Quitte la boucle si 30 points sont atteints et aucune combinaison n'a été jouée
-    
-            # Logique pour poser une combinaison
-            choix_combinaison = input("Voulez-vous poser une combinaison? (o/n): ")
-            if choix_combinaison.lower() == "o":
-                combinaison_str = input("Entrez les indices des jetons à poser séparés par des espaces : ")
-                indices = [int(i) for i in combinaison_str.split()]
-                combinaison_a_poser = [joueur_actuel.chevalet[i] for i in indices]
-    
-                if self.ajouter_combinaison(combinaison_a_poser):
-                    a_joue_combinaison = True
-                    combinaisons_posees.append(combinaison_a_poser)
+            choix = self.demander_action(a_joue_combinaison, joueur_actuel.premier_jeu)
+
+            if choix == '1':  # Choix de piocher
+                if joueur_actuel.chevalet != etat_initial_chevalet:
+                    if a_joue_combinaison:
+                        # Demande de confirmation pour terminer le tour si le joueur n'a pas atteint 30 points ou a encore des jetons pris
+                        if (total_points < 30 and not joueur_actuel.premier_jeu) or jetons_pris:
+                            confirmation = input(
+                                f"Vous n'avez pas atteint 30 points ou vous avez encore des jetons pris du plateau. Voulez-vous terminer le tour ? (oui/non) : ").lower()
+                            if confirmation == 'oui':
+                                print(f"{joueur_actuel.nom} a choisi de terminer son tour.")
+                                joueur_actuel.chevalet = etat_initial_chevalet[:]
+                                joueur_actuel.jetons_du_plateau = etat_initial_plateaux[:]
+                                self.plateau.combinaisons = etat_initial_combinaisons[:]
+                                joueur_actuel.premier_jeu = etat_initial_joueur
+                                if self.tas_jetons:
+                                    jeton = self.tas_jetons.pop()
+                                    joueur_actuel.piocher(jeton)
+                                    print(f"{joueur_actuel.nom} a pioché un jeton pour finir son tour : {jeton}")
+                            else:
+                                print("Tour annulé. Vous pouvez continuer à jouer.")
+                        else:
+                            joueur_actuel.premier_jeu = False  # Le joueur peut désormais sélectionner le choix 3
+                            break
+                    
+                elif self.tas_jetons:
+                    jeton = self.tas_jetons.pop()
+                    joueur_actuel.piocher(jeton)
+                    print(f"{joueur_actuel.nom} a pioché : {jeton}")
+                    break
                 else:
-                    print("Échec lors de la pose de la combinaison.")
-    
-            # Logique pour piocher un jeton si aucune combinaison n'a été posée
-            choix = input("Voulez-vous piocher un jeton? (o/n): ")
-            if choix.lower() == "o":
-                jeton_pris = self.prendre_jeton(joueur_actuel)
-                if jeton_pris:
-                    print(f"{joueur_actuel.nom} a pris le jeton {jeton_pris}.")
-    
-            if total_points >= 30 and a_joue_combinaison:
-                print(f"{joueur_actuel.nom} a terminé son tour avec succès.")
-                break  # Quitte la boucle si le tour est terminé avec succès
+                    self.tentatives_sans_jeton += 1
+                    print("Il n'y a plus de jetons à piocher.")
+                    break
 
-            if not jeton and not a_joue_combinaison:
-                self.tentatives_sans_jeton += 1
-    
-            if self.tentatives_sans_jeton >= 3:
-                print(f"{joueur_actuel.nom} ne peut plus piocher de jetons.")
-                break  # Quitte la boucle si le joueur ne peut plus piocher de jetons
-    
-        # Mise à jour de l'état final du joueur
-        joueur_actuel.jetons_du_plateau.extend(joueur_actuel.chevalet)
-        joueur_actuel.chevalet = []  # Réinitialise le chevalet du joueur
-        self.tour += 1  # Passe au tour suivant
+            elif choix == '2':  # Jouer une combinaison
+                combinaison = self.demander_combinaison(joueur_actuel)
+
+                if self.ajouter_combinaison(combinaison):
+                    score_combinaison = self.calculer_score_combinaison(combinaison)
+                    combinaisons_posees.append(combinaison)
+                    total_points += score_combinaison
+                    self.tentatives_sans_jeton = 0
+                    a_joue_combinaison = True
+
+                    if joueur_actuel.premier_jeu and total_points >= 30:
+                        print(f"{joueur_actuel.nom} a atteint 30 points et peut maintenant prendre des jetons du plateau.")
+
+                    print(f"Points cumulés : {total_points}")
+
+                else:
+                    print("Combinaison invalide !")
+                    joueur_actuel.chevalet = etat_initial_chevalet[:]
+                    self.plateau.combinaisons = etat_initial_combinaisons[:]
+                    combinaisons_posees.clear()
+                    total_points = 0
+                    continue
+
+            elif choix == '3' and not joueur_actuel.premier_jeu:  # Prendre un jeton du plateau
+                comb_index = int(input("Entrez le numéro de la combinaison : ")) - 1
+                jeton_index = int(input("Entrez l'index du jeton dans la combinaison : "))
+                if self.plateau.prendre_jeton(comb_index, jeton_index, joueur_actuel):
+                    jetons_pris.append((comb_index, jeton_index))
+                else:
+                    print("Erreur lors de la prise de jeton.")
+                continue
+
+            else:
+                print("Choix invalide. Veuillez entrer 1, 2 ou 3 (le choix 3 est indisponible tant que vous n'avez pas atteint 30 points).")
+
+            if not joueur_actuel.chevalet and not joueur_actuel.jetons_du_plateau:
+                print(f"{joueur_actuel.nom} a gagné la partie en n'ayant plus de jetons !")
+                return False  # La partie est terminée
+
+        self.tour += 1
         return True
-
-    def prendre_jeton(self, joueur):
-        """Permet à un joueur de piocher un jeton du tas, si disponible.
-        
-        Paramètres :
-        - joueur : l'objet joueur qui essaie de piocher un jeton.
-        
-        Retourne :
-        - Le jeton pioché, ou None s'il n'y a pas de jeton à piocher.
+    
+    def demander_action(self, a_joue_combinaison, premier_jeu):
         """
-        if self.tas_jetons:
-            jeton = self.tas_jetons.pop()
-            joueur.piocher(jeton)
-            return jeton
+        Demande au joueur l'action qu'il souhaite effectuer.
+
+        Paramètres :
+        - a_joue_combinaison : Indique si le joueur a déjà joué une combinaison.
+        - premier_jeu : Indique si c'est le premier jeu du joueur.
+
+        Retourne :
+        - Le choix de l'action sous forme de chaîne de caractères.
+        """
+        if a_joue_combinaison:
+            # Si le joueur a déjà joué une combinaison, il peut terminer son tour ou jouer une autre combinaison
+            return input("Voulez-vous (1) terminer votre tour, (2) jouer une autre combinaison ou (3) prendre un jeton du plateau? (entrez 1, 2 ou 3) : ") if not premier_jeu else input("Voulez-vous (1) terminer votre tour ou (2) jouer une autre combinaison ? (entrez 1 ou 2) : ")
         else:
-            print("Aucun jeton à piocher !")
-            return None
+            # Si le joueur n'a pas encore joué de combinaison
+            if premier_jeu:
+                return input("Voulez-vous (1) piocher ou (2) jouer une combinaison ? (entrez 1 ou 2) : ")
+            else:
+                return input("Voulez-vous (1) piocher, (2) jouer une combinaison ou (3) prendre un jeton du plateau? (entrez 1, 2 ou 3) : ")
+
+    def demander_combinaison(self, joueur_actuel):
+        """
+        Demande au joueur d'entrer les lettres des jetons qu'il souhaite poser.
+
+        Paramètres :
+        - joueur_actuel : Le joueur qui effectue l'action.
+
+        Retourne :
+        - Une liste des jetons sélectionnés par le joueur.
+        """
+        lettres = input("Entrez les lettres des jetons à poser (séparées par des virgules) : ")
+        indices = [ord(l) - 65 for l in lettres if l.isalpha() and 0 <= ord(l) - 65 < len(joueur_actuel.chevalet)]
+        return [joueur_actuel.chevalet[i] for i in indices]
+
+    def calculer_score_combinaison(self, combinaison):
+        """
+        Calcule le score d'une combinaison de jetons.
+
+        Paramètres :
+        - combinaison : Liste de jetons dont on souhaite calculer le score.
+
+        Retourne :
+        - La somme des valeurs des jetons dans la combinaison.
+        """
+        return sum(jeton.nombre if jeton.nombre is not None else 0 for jeton in combinaison if isinstance(jeton, Jeton))
+
+    def partie_terminee(self):
+        """
+        Vérifie si la partie est terminée.
+
+        Retourne :
+        - True si la partie est terminée, False sinon.
+        """
+        return not self.tas_jetons and self.tentatives_sans_jeton >= len(self.joueurs) * 2
